@@ -13,7 +13,7 @@ I'm using this container to get a wildcard certificate with a raspberry pi in my
 ### Build
 
 Clone this repo and inside the project folder: 
-`sudo docker image build -t desec-hook-certbot-docker .`
+`docker image build -t desec-certbot .`
 
 ### RUN
 
@@ -23,12 +23,12 @@ Clone this repo and inside the project folder:
     --restart unless-stopped \
     -v "/etc/letsencrypt:/etc/letsencrypt" \
     -v "/var/log/letsencrypt:/var/log/letsencrypt" \
-    -e "TZ=Europe/Berlin" \
+    -e "TZ=Europe/Moscow" \
     --env "DEDYN_TOKEN={DEDYN_TOKEN}" \
     --env "DEDYN_NAME={DEDYN_NAME}" \
     --env "DOMAINS={DOMAINS}" \
     --env "DOMAIN_EMAIL={DOMAIN_EMAIL}" \
-    certbot-test
+    desec-certbot
 ```
 * Volumes and timezone (`TZ`) can be configured as you wish. Timezone is used for cron renewal.
 * `{DEDYN_TOKEN}` a dedyn/desec token that's valid for the planned runtime of the container.
@@ -46,14 +46,32 @@ The [crontab](crontab) file can be configured to run the renewal check at any ti
     --restart unless-stopped \
     -v "/etc/letsencrypt:/etc/letsencrypt" \
     -v "/var/log/letsencrypt:/var/log/letsencrypt" \
-    -e "TZ=Europe/Berlin" \
+    -e "TZ=Europe/Moscow" \
     --env "DEDYN_TOKEN=abcxyzabcxyzabcxyz" \
     --env "DEDYN_NAME=example.com" \
     --env "DOMAINS=example.com *.example.com" \
     --env "DOMAIN_EMAIL=me@example.com" \
-    certbot-test
+    desec-certbot
 ```
 Note, the email doesn't need to be the same domain. You can use gmail or whatever you want.
+
+Docker compose:
+```
+  services:
+    desec-certbot:
+      image: desec-certbot
+      container_name: desec-certbot
+      environment:
+        - TZ=Europe/Moscow
+        - DOMAIN_EMAIL=me@example.com
+        - DOMAINS=example.com *.example.com
+        - DEDYN_NAME=example.com
+        - DEDYN_TOKEN=abcxyzabcxyzabcxyz
+      volumes:
+        - /etc/letsencrypt:/etc/letsencrypt
+        - /var/log/letsencrypt:/var/log/letsencrypt
+      restart: unless-stopped
+```
 
 ## More info
 
