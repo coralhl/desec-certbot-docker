@@ -1,5 +1,7 @@
 FROM alpine:3.18
 
+ENV TZ=Europe/Moscow
+
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
     apk --no-cache add \
@@ -7,6 +9,8 @@ RUN apk --no-cache update && \
         certbot \
         tzdata \
         bash
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY crontab /etc/crontabs/root
 RUN chmod 755 /etc/crontabs/root

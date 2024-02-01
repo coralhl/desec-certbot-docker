@@ -1,5 +1,7 @@
 #!/bin/bash
 
+chmod 755 /etc/crontabs/root
+
 echo "
     # Place your dedyn.io access token here:
     DEDYN_TOKEN=$DEDYN_TOKEN
